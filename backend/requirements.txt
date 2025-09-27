@@ -1,6 +1,7 @@
 Flask
 flask-cors
 flask[async]
+hyperon
 dotenv
 jsonschema
 requests
