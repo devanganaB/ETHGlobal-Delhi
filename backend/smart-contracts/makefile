@@ -55,4 +55,4 @@ deploySepoliaNativeHabitBuilder:
 		@forge script script/DeployNativeHabitBuilderPool.s.sol --rpc-url $(SEPOLIA_RPC_URL) --account devWallet --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvvv
 
 deploySepoliaNativeContest:
-		@forge script script/DeployNativeContestPool.s.sol --rpc-url $(SEPOLIA_RPC_URL) --account devWallet --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvvv
+		@forge script script/DeployNativeContestPool.s.sol --rpc-url $(SEPOLIA_RPC_URL) --account devWallet --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvvv --via-ir
