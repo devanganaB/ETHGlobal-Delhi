@@ -218,7 +218,7 @@
     "inputs": [],
     "name": "recollectStake",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
