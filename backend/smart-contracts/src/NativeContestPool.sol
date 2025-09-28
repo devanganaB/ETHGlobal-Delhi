@@ -70,9 +70,9 @@ contract NativeContestPool is IEntropyConsumer {
     // constructor
     constructor(
         address _entropyAddress,
-        address _pythContractAddress,
+        // address _pythContractAddress,
         uint256 _entranceFee,
-        address _pyusdAddress,
+        // address _pyusdAddress,
         address _serverAddress,
         AbilityNFT _abilityNft
     ) {
@@ -246,7 +246,7 @@ contract NativeContestPool is IEntropyConsumer {
                 );
                 s_abilityNft.mint(probabilityBuff, timeBuff, s_participants[i]);
             }
-            if s_abilityNft.balanceOf(participant[i]);
+            // if s_abilityNft.balanceOf(participant[i]);
             uint256 totalTickets;
             uint256 submissionTimestamp = s_participantCompletionStatusHistory[
                 s_currentVersion
@@ -254,36 +254,40 @@ contract NativeContestPool is IEntropyConsumer {
             uint256 delay = submissionTimestamp - s_currentContestStartTime;
             // tickets[i] = 1e18 / sqrt(delay);
             totalTickets += 1e18 / sqrt(delay);
-        }
-        uint256 selector = randomUintNumber % totalTickets;
-        uint256 running;
-        for (uint256 i = 0; i < s_participants.length; i++) {
-            uint256 submissionTimestamp = s_participantCompletionStatusHistory[
-                s_currentVersion
-            ][s_participants[i]];
-            uint256 delay = submissionTimestamp - s_currentContestStartTime + 1;
-            uint256 weight = 1e18 / sqrt(delay);
-            running += weight;
-            if (selector < running) {
-                s_winner = s_participants[i];
-            }
-            if (s_winner == address(0)) {
-                s_winner = s_participants[
-                    randomUintNumber % s_participants.length
-                ];
-            }
-            (bool success, ) = s_winner.call{value: address(this).balance}("");
-            if (!success) {
-                revert NativeContestPool__TransferFailed();
-            }
+            uint256 selector = randomUintNumber % totalTickets;
+            uint256 running;
+            for (uint256 i = 0; i < s_participants.length; i++) {
+                uint256 submissionTimestamp = s_participantCompletionStatusHistory[
+                        s_currentVersion
+                    ][s_participants[i]];
+                uint256 delay = submissionTimestamp -
+                    s_currentContestStartTime +
+                    1;
+                uint256 weight = 1e18 / sqrt(delay);
+                running += weight;
+                if (selector < running) {
+                    s_winner = s_participants[i];
+                }
+                if (s_winner == address(0)) {
+                    s_winner = s_participants[
+                        randomUintNumber % s_participants.length
+                    ];
+                }
+                (bool success, ) = s_winner.call{value: address(this).balance}(
+                    ""
+                );
+                if (!success) {
+                    revert NativeContestPool__TransferFailed();
+                }
 
-            s_participants = new address payable[](0);
-            s_currentVersion++;
-            s_randomNumber = randomUintNumber;
-            s_currentContestStartTime = block.timestamp;
-            // s_switch = Switch.Stop;
+                s_participants = new address payable[](0);
+                s_currentVersion++;
+                s_randomNumber = randomUintNumber;
+                s_currentContestStartTime = block.timestamp;
+                s_switch = Switch.Stop;
 
-            emit ResultDeclared(sequenceNumber, s_winner);
+                emit ResultDeclared(sequenceNumber, s_winner);
+            }
         }
     }
 

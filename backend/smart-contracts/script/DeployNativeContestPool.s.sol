@@ -27,9 +27,9 @@ contract NativeContestPoolScript is Script {
 
         nativeContestPool = new NativeContestPool(
             ENTROPY_OP,
-            PYTH_CONTRACT_ADDRESS,
+            // PYTH_CONTRACT_ADDRESS,
             ENTRANCE_FEE,
-            PYUSD_SEPOLIA,
+            // PYUSD_SEPOLIA,
             server,
             abilityNft
         );
