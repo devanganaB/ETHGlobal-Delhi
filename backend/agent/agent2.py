@@ -3,6 +3,8 @@ import json
 from hyperon import MeTTa
 from metta.codingrag import CodingRAG
 from metta.knowledge import initialize_knowledge_graph
+import requests
+
 
 local = Agent( 
     name="local",
@@ -23,6 +25,7 @@ class ResMessage(Model):
     hidden_cases: list
 
 SERVER_ADDR = "agent1qgrh82rawn4mzn05wzdslyg9e6arfn5e0x5uy0lrhcl05g2kk8v2geg8fs4"  
+jsonBIN = "$2a$10$WIxInT.rgWstizVabPnjXe8SRHP/XdhgnrQPlrpVYzlRFPJAvusp2"
 
 # setup MeTTa and RAG
 metta = MeTTa()
@@ -64,7 +67,7 @@ Requirements:
 '''
 
 
-def build_prompt(topic: str) -> ResMessage:
+def build_prompt(topic: str) -> Message:
     """Use CodingRAG to validate topic and build structured prompt JSON."""
     
     if topic.lower() not in available_topics:
@@ -98,7 +101,7 @@ def build_prompt(topic: str) -> ResMessage:
 
 # async def send_query(ctx: Context):
 @local.on_rest_get("/rest/get", Message)
-async def handle_query(ctx: Context) -> ResMessage:
+async def handle_query(ctx: Context) -> str:
     topic = "array"
 
     try:
@@ -112,27 +115,22 @@ async def handle_query(ctx: Context) -> ResMessage:
     reply, status = await ctx.send_and_receive(SERVER_ADDR, query_msg, response_type=Message)
     if isinstance(reply, Message):
         ctx.logger.info(f"Received awaited response: {reply.message}")
-        try:
-            result_json = json.loads(reply.message)
-            # Now you have a dict/list, not a raw string
-            # return ResMessage(message=json.dumps(result_json, indent=2))
-            return ResMessage(
-                topic=result_json.get("topic"),
-                requirements=result_json.get("requirements"),
-                description=result_json.get("description"),
-                test_cases=result_json.get("test cases"),
-                hidden_cases=result_json.get("hidden cases")
-            )
-        except json.JSONDecodeError:
-            ctx.logger.error("Hosted agent did not return valid JSON")
-            # return ResMessage(message="Error: Invalid JSON received")
-            return ResMessage(
-                topic=topic,
-                requirements=[],
-                description="Error parsing response",
-                test_cases=[],
-                hidden_cases=[]
-            )
+        result_json = json.loads(reply.message)
+
+        url = "https://api.jsonbin.io/v3/b"
+        header = {
+            'Content-Type': "application/json",
+            'X-Master-Key': '$2a$10$pwsz5BuKi/IF766zPPxB8er9t5Mm6I9hOt9IxtXB1cwAJzj/egipi'
+        }
+
+        req = requests.post(url,json=result_json, headers=header)
+
+        jsondata = req.json()   # directly parses to dict
+
+        # Safely log and return
+        ctx.logger.info(f"Response: {jsondata['metadata']['id']}")
+        return Message(message=jsondata['metadata']['id'])
+        
     else:
         ctx.logger.info(f"Failed to receive response: {status}")
     

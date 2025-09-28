@@ -32,16 +32,20 @@ const { address, isConnected } = useAccount();
     }
   ];
 
-  const goToHabitPage = async() => {
+  const goToHabitPage = async(index) => {
     if(!address || !isConnected) {
       alert("Please connect your wallet first!");
       return;
     }
 
+    console.log(index)
     // contract query
-
-    navigate('/habit');
-
+    if(index == 0){
+      navigate('/habit',{ state: "habit" }); 
+    }
+    else if(index == 1){
+        navigate('/stake',{ state: "contest" });  
+    }
   }
 
   return (
@@ -90,7 +94,7 @@ const { address, isConnected } = useAccount();
                 <div 
                   key={index}
                   className="group bg-white/5 backdrop-blur-sm rounded-2xl p-10 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105"
-                  onClick={() => goToHabitPage()}
+                  onClick={() => goToHabitPage(index)}
                 >
                   <div className="flex flex-col items-center space-y-6 text-center">
                     <div className="w-20 h-20 bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">

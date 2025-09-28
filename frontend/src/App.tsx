@@ -16,6 +16,7 @@ import Navbar from './components/Navbar';
 import ConnectPage from './pages/ConnectPage';
 import Habitpage from './pages/Habitpage';
 import Contestpage from './pages/Contestpage';
+import Stake from './pages/Stake';
 
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ConnectPage />} />
             <Route path="/habit" element={<Habitpage />} />
+            <Route path="/stake" element={<Stake/>} />
             <Route path="/contest" element={<Contestpage />} />
           </Routes>
         </RainbowKitProvider>
