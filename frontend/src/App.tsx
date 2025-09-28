@@ -17,6 +17,8 @@ import ConnectPage from './pages/ConnectPage';
 import Habitpage from './pages/Habitpage';
 import Contestpage from './pages/Contestpage';
 import Stake from './pages/Stake';
+import Chatbot from './pages/Chatbot';
+
 
 
 const queryClient = new QueryClient();
@@ -51,6 +53,7 @@ function App() {
             <Route path="/habit" element={<Habitpage />} />
             <Route path="/stake" element={<Stake/>} />
             <Route path="/contest" element={<Contestpage />} />
+            <Route path='/chatbot' element={Chatbot} />
           </Routes>
         </RainbowKitProvider>
       </QueryClientProvider>

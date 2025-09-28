@@ -86,8 +86,15 @@ const ContestPage = () => {
       console.log("getIfContestHasQuestion:" , getIfContestHasQuestion);
 
       if(getIfContestHasQuestion == 0){
-        // const questionBinID = await axios.get("devanganaendpoint")
-        const questionBinID = "68d863f1d0ea881f408d49bc"
+
+
+        const randomNmber = await contract.getRandomNumberForQuestions();
+
+        const response  = await axios.post("https://8tzqjh0w-8000.inc1.devtunnels.ms/rest/get",{
+          index: randomNmber % 5
+        })
+        const questionBinID = response.data.message;
+        // const questionBinID = "68d863f1d0ea881f408d49bc"
 
         const getquestionsFromId = await getQuestionFromJsonBin(questionBinID);
         
@@ -149,9 +156,9 @@ const ContestPage = () => {
       }
       
     }
-    if(timeLeft <= 0){
-      getResult()
-    }
+    // if(timeLeft <= 0){
+    //   getResult()
+    // }
   }, [timeLeft, isContestActive]);
 
   const calculateResult = async() =>{

@@ -45,6 +45,8 @@ const { address, isConnected } = useAccount();
     }
     else if(index == 1){
         navigate('/stake',{ state: "contest" });  
+    }else if(index == 2){
+      navigate('/chatbot') 
     }
   }
 
